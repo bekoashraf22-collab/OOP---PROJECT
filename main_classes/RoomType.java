@@ -1,4 +1,7 @@
 
+package main_classes;
+
+
 public class RoomType {
     private String typeId;
     private String typeName; // e.g., "Single", "Double", "Suite"
