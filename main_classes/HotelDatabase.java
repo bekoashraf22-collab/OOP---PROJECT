@@ -13,7 +13,7 @@ public class HotelDatabase {
         try {
             // Adding a Guest
             guests.add(new Guest("Abdullah", "pass1234", LocalDate.of(2005, 1, 1), 
-                                 500.0, "Cairo", Gender.MALE, "High floor"));
+                                 3000.0, "Cairo", Gender.MALE, "High floor"));
             
             // Adding an Admin
             staffMembers.add(new Admin("Admin_User", "adminPass789", LocalDate.of(1990, 5, 20), 40));
