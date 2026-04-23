@@ -11,11 +11,26 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Main {
+    
+    // NEW: We created a small 'Wrapper Class' to hold both the Room and the Number of Nights
+    static class Booking {
+        Room room;
+        int nights;
+        
+        public Booking(Room room, int nights) {
+            this.room = room;
+            this.nights = nights;
+        }
+    }
+
     // System Database
     static List<RoomType> roomTypes = new ArrayList<>();
     static List<Room> rooms = new ArrayList<>();
     static List<Amenity> globalAmenities = new ArrayList<>();
-    static Map<String, List<Room>> guestReservations = new HashMap<>();
+    
+    // NEW: The map now stores a List of 'Booking' objects instead of just 'Room' objects
+    static Map<String, List<Booking>> guestReservations = new HashMap<>();
+    
     static List<String> systemLogs = new ArrayList<>();
 
     public static void main(String[] args) {
@@ -51,7 +66,6 @@ public class Main {
             logAction(currentUser.getUsername() + " logged in.");
             boolean loggedIn = true;
             
-            // Ensure the user has an active reservation list to prevent NullPointerExceptions
             if (currentUser instanceof Guest) {
                 guestReservations.putIfAbsent(currentUser.getUsername(), new ArrayList<>());
             }
@@ -65,7 +79,6 @@ public class Main {
                 } else if (currentUser instanceof Guest) {
                     loggedIn = handleGuestActions((Guest) currentUser, choice, scanner);
                 } else if (currentUser instanceof Receptionist) {
-                    // FIX: Wired the Receptionist menu to the new handler!
                     loggedIn = handleReceptionistActions((Receptionist) currentUser, choice, scanner);
                 }
             }
@@ -73,7 +86,7 @@ public class Main {
     }
 
     // ==========================================
-    // RECEPTIONIST ACTIONS (FIXED & ADDED)
+    // RECEPTIONIST ACTIONS
     // ==========================================
     private static boolean handleReceptionistActions(Receptionist receptionist, String choice, Scanner scanner) {
         switch (choice) {
@@ -85,12 +98,22 @@ public class Main {
                 
                 Room r = findRoom(rNum);
                 if (r != null && r.isAvailable()) {
-                    r.setAvailable(false);
-                    // Ensure the guest exists in the mapping
-                    guestReservations.putIfAbsent(guestName, new ArrayList<>());
-                    guestReservations.get(guestName).add(r);
-                    System.out.println("Success: Checked " + guestName + " into Room " + rNum);
-                    logAction("Receptionist " + receptionist.getUsername() + " checked " + guestName + " into Room " + rNum);
+                    try {
+                        // NEW: Receptionist also inputs number of nights during check-in
+                        System.out.print("Enter number of nights for this stay: ");
+                        int nights = Integer.parseInt(scanner.nextLine().trim());
+                        
+                        r.setAvailable(false);
+                        guestReservations.putIfAbsent(guestName, new ArrayList<>());
+                        
+                        // NEW: Save the room and nights as a Booking
+                        guestReservations.get(guestName).add(new Booking(r, nights));
+                        
+                        System.out.println("Success: Checked " + guestName + " into Room " + rNum + " for " + nights + " nights.");
+                        logAction("Receptionist checked " + guestName + " into Room " + rNum);
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Please enter a valid number for nights.");
+                    }
                 } else {
                     System.out.println("Error: Room is unavailable or does not exist.");
                 }
@@ -99,22 +122,21 @@ public class Main {
             case "2": // Check-out Guest
                 System.out.print("Enter Guest Username to check-out: ");
                 String checkoutName = scanner.nextLine().trim();
-                List<Room> gRooms = guestReservations.get(checkoutName);
+                List<Booking> gRooms = guestReservations.get(checkoutName); // NEW: List of Bookings
                 
                 if (gRooms != null && !gRooms.isEmpty()) {
-                    // Free all rooms assigned to this guest
-                    for (Room room : gRooms) {
-                        room.setAvailable(true);
+                    for (Booking booking : gRooms) {
+                        booking.room.setAvailable(true); // NEW: Access the room inside the booking
                     }
                     gRooms.clear();
                     System.out.println("Success: Guest " + checkoutName + " has been checked out of all rooms.");
-                    logAction("Receptionist " + receptionist.getUsername() + " checked out " + checkoutName);
+                    logAction("Receptionist checked out " + checkoutName);
                 } else {
                     System.out.println("Error: No active reservations found for this guest.");
                 }
                 break;
 
-            case "3": // Manage Keys (View Occupied)
+            case "3": // Manage Keys
                 System.out.println("\n--- OCCUPIED ROOMS (KEY MANAGEMENT) ---");
                 boolean anyOccupied = false;
                 for (Room room : rooms) {
@@ -123,32 +145,26 @@ public class Main {
                         anyOccupied = true;
                     }
                 }
-                if (!anyOccupied) {
-                    System.out.println("All rooms are currently vacant. All keys are at the desk.");
-                }
+                if (!anyOccupied) System.out.println("All rooms are currently vacant.");
                 break;
 
             case "4": // Logout
-                logAction("Receptionist " + receptionist.getUsername() + " logged out.");
                 return false;
-
-            default:
-                System.out.println("Invalid option. Please try again.");
         }
         return true;
     }
 
     // ==========================================
-    // ADMIN ACTIONS
+    // ADMIN ACTIONS (Remains mostly the same)
     // ==========================================
     private static boolean handleAdminActions(Admin admin, String choice, Scanner scanner) {
         switch (choice) {
-            case "1": // Add Room
+            case "1": 
                 System.out.print("New Room Number: ");
                 String rNum = scanner.nextLine().trim();
                 System.out.println("Select Type:");
                 for (int i = 0; i < roomTypes.size(); i++) {
-                    System.out.println((i+1) + ". " + roomTypes.get(i).getTypeName() + " ($" + roomTypes.get(i).getBasePrice() + ")");
+                    System.out.println((i+1) + ". " + roomTypes.get(i).getTypeName() + " ($" + roomTypes.get(i).getBasePrice() + "/night)");
                 }
                 try {
                     int idx = Integer.parseInt(scanner.nextLine().trim()) - 1;
@@ -158,7 +174,7 @@ public class Main {
                 } catch (Exception e) { System.out.println("Error: Invalid selection."); }
                 break;
 
-            case "2": // Edit Amenities
+            case "2": 
                 System.out.print("Room Number to Modify: ");
                 String rid = scanner.nextLine().trim();
                 Room room = findRoom(rid);
@@ -166,28 +182,23 @@ public class Main {
                 if (room != null) {
                     System.out.println("Select Amenity to Add:");
                     for (int i = 0; i < globalAmenities.size(); i++) {
-                        System.out.println((i+1) + ". " + globalAmenities.get(i).getName() + " ($" + globalAmenities.get(i).getExtraCost() + ")");
+                        System.out.println((i+1) + ". " + globalAmenities.get(i).getName() + " ($" + globalAmenities.get(i).getExtraCost() + "/night)");
                     }
                     try {
                         int aidx = Integer.parseInt(scanner.nextLine().trim()) - 1;
-                        Amenity selectedAmenity = globalAmenities.get(aidx);
-                        room.addAmenity(selectedAmenity);
-                        System.out.println("Success: " + selectedAmenity.getName() + " added to Room " + rid);
-                        logAction("Admin added " + selectedAmenity.getName() + " to room " + rid);
+                        room.addAmenity(globalAmenities.get(aidx));
+                        System.out.println("Success: Amenity added to Room " + rid);
                     } catch (Exception e) { System.out.println("Error: Invalid selection."); }
-                } else { 
-                    System.out.println("Error: Room not found."); 
-                }
+                } else { System.out.println("Error: Room not found."); }
                 break;
 
-            case "3": // View Logs
+            case "3": 
                 System.out.println("\n--- SYSTEM LOGS ---");
                 if (systemLogs.isEmpty()) System.out.println("No logs available.");
                 else for (String log : systemLogs) System.out.println(log);
                 break;
 
-            case "4": // Logout
-                return false;
+            case "4": return false;
         }
         return true;
     }
@@ -202,8 +213,9 @@ public class Main {
                 boolean found = false;
                 for (Room r : rooms) {
                     if (r.isAvailable()) {
+                        // NEW: Explicitly stating this is the DAILY rate
                         System.out.println("Room " + r.getRoomNumber() + " [" + r.getRoomType().getTypeName() + 
-                                           "] | Total Cost: $" + calculateRoomTotal(r) + " | Amenities: " + r.getAmenities().size());
+                                           "] | Daily Rate: $" + calculateDailyRate(r) + " | Amenities: " + r.getAmenities().size());
                         found = true;
                     }
                 }
@@ -215,47 +227,63 @@ public class Main {
                 String bNum = scanner.nextLine().trim();
                 Room bRoom = findRoom(bNum);
                 
-                if (bRoom == null) {
-                    System.out.println("Error: Room '" + bNum + "' does not exist.");
-                    break;
-                }
-                
-                if (!bRoom.isAvailable()) {
-                    System.out.println("Error: Room " + bNum + " is currently occupied.");
+                if (bRoom == null || !bRoom.isAvailable()) {
+                    System.out.println("Error: Room is unavailable or does not exist.");
                     break;
                 }
 
-                List<Room> currentReservations = guestReservations.get(guest.getUsername());
-                double pendingDebt = 0;
-                for (Room r : currentReservations) {
-                    pendingDebt += calculateRoomTotal(r);
-                }
-                
-                double newRoomCost = calculateRoomTotal(bRoom);
-                double totalRequired = pendingDebt + newRoomCost;
+                try {
+                    // NEW: Ask for the number of nights
+                    System.out.print("How many nights will you be staying? ");
+                    int nights = Integer.parseInt(scanner.nextLine().trim());
+                    
+                    if (nights <= 0) {
+                        System.out.println("Error: You must stay at least 1 night.");
+                        break;
+                    }
 
-                System.out.println("\n--- FINANCIAL CHECK ---");
-                System.out.println("Your Current Balance: $" + guest.getBalance());
-                System.out.println("Pending Debt: $" + pendingDebt);
-                System.out.println("Cost of New Room: $" + newRoomCost);
-                
-                if (guest.getBalance() >= totalRequired) {
-                    bRoom.setAvailable(false);
-                    currentReservations.add(bRoom);
-                    System.out.println("SUCCESS: Room " + bNum + " reserved!");
-                    logAction(guest.getUsername() + " reserved room " + bNum);
-                } else {
-                    System.out.println("BOOKING DENIED: You do not have enough funds.");
+                    // NEW: Calculate debt using the Booking objects
+                    List<Booking> currentReservations = guestReservations.get(guest.getUsername());
+                    double pendingDebt = 0;
+                    for (Booking b : currentReservations) {
+                        pendingDebt += (calculateDailyRate(b.room) * b.nights);
+                    }
+                    
+                    // NEW: Calculate the cost for THIS specific booking
+                    double dailyRate = calculateDailyRate(bRoom);
+                    double newBookingCost = dailyRate * nights;
+                    double totalRequired = pendingDebt + newBookingCost;
+
+                    System.out.println("\n--- FINANCIAL CHECK ---");
+                    System.out.println("Your Current Balance: $" + guest.getBalance());
+                    System.out.println("Cost per night: $" + dailyRate + " x " + nights + " nights = $" + newBookingCost);
+                    System.out.println("Total Amount Required (including past bookings): $" + totalRequired);
+                    
+                    if (guest.getBalance() >= totalRequired) {
+                        bRoom.setAvailable(false);
+                        // NEW: Save the new Booking object
+                        currentReservations.add(new Booking(bRoom, nights));
+                        System.out.println("SUCCESS: Room " + bNum + " reserved for " + nights + " nights!");
+                        logAction(guest.getUsername() + " reserved room " + bNum + " for " + nights + " nights");
+                    } else {
+                        System.out.println("BOOKING DENIED: You do not have enough funds.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Invalid number of nights entered.");
                 }
                 break;
 
             case "3": // View My Bookings
-                List<Room> myRooms = guestReservations.get(guest.getUsername());
+                List<Booking> myRooms = guestReservations.get(guest.getUsername());
                 System.out.println("\n--- YOUR BOOKINGS ---");
                 if (myRooms.isEmpty()) System.out.println("No active bookings.");
                 else {
-                    for (Room r : myRooms) {
-                        System.out.println("Room " + r.getRoomNumber() + " (" + r.getRoomType().getTypeName() + ") | Price: $" + calculateRoomTotal(r));
+                    for (Booking b : myRooms) {
+                        // NEW: Show the daily rate, nights, and the total for that room
+                        double daily = calculateDailyRate(b.room);
+                        double totalForRoom = daily * b.nights;
+                        System.out.println("Room " + b.room.getRoomNumber() + " (" + b.room.getRoomType().getTypeName() + ") | " + 
+                                           "Nights: " + b.nights + " | Total: $" + totalForRoom);
                     }
                 }
                 break;
@@ -264,8 +292,7 @@ public class Main {
                 handleAutomatedCheckout(guest, scanner);
                 break;
 
-            case "5": // Logout
-                return false;
+            case "5": return false;
         }
         return true;
     }
@@ -274,14 +301,17 @@ public class Main {
     // AUTOMATED CHECKOUT
     // ==========================================
     private static void handleAutomatedCheckout(Guest guest, Scanner scanner) {
-        List<Room> myRooms = guestReservations.get(guest.getUsername());
+        List<Booking> myRooms = guestReservations.get(guest.getUsername());
         if (myRooms == null || myRooms.isEmpty()) {
             System.out.println("You have no active reservations to pay for.");
             return;
         }
 
+        // NEW: Calculate Grand Total by multiplying each room's daily rate by its nights
         double grandTotal = 0;
-        for (Room r : myRooms) grandTotal += calculateRoomTotal(r);
+        for (Booking b : myRooms) {
+            grandTotal += (calculateDailyRate(b.room) * b.nights);
+        }
 
         System.out.println("\n--- AUTOMATED CHECKOUT ---");
         System.out.println("Total Outstanding Balance: $" + grandTotal);
@@ -299,7 +329,10 @@ public class Main {
         try {
             guest.processPayment(grandTotal, method);
             
-            for (Room r : myRooms) r.setAvailable(true);
+            // Release the rooms back to the hotel
+            for (Booking b : myRooms) {
+                b.room.setAvailable(true); 
+            }
             myRooms.clear();
             
             logAction(guest.getUsername() + " checked out and paid $" + grandTotal);
@@ -315,12 +348,14 @@ public class Main {
     // ==========================================
     // HELPERS
     // ==========================================
-    private static double calculateRoomTotal(Room r) {
-        double total = r.getRoomType().getBasePrice();
+    
+    // NEW: Renamed this to clarify it calculates the cost for ONE night
+    private static double calculateDailyRate(Room r) {
+        double dailyTotal = r.getRoomType().getBasePrice();
         for (Amenity a : r.getAmenities()) {
-            total += a.getExtraCost();
+            dailyTotal += a.getExtraCost();
         }
-        return total;
+        return dailyTotal;
     }
 
     private static void handleRegistration(Scanner scanner) {
