@@ -4,14 +4,14 @@ import java.util.List;
 
 public class Room {
     private String roomNumber;
-    private RoomType roomType; // Associated with ONE RoomType
-    private List<Amenity> amenities; // Associated with a LIST of Amenities
+    private RoomType roomType; 
+    private List<Amenity> amenities; 
     private boolean isAvailable;
 
     public Room(String roomNumber, RoomType roomType) {
         this.roomNumber = roomNumber;
         this.roomType = roomType;
-        this.amenities = new ArrayList<>(); // Initialize the empty list
+        this.amenities = new ArrayList<>(); 
         this.isAvailable = true; // Rooms are available by default when created
     }
 

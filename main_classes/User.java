@@ -38,7 +38,7 @@ public abstract class User {
     
     public LocalDate getDateOfBirth() { return dateOfBirth; }
     
-    // Exception is thrown here, using the ChronoUnit import properly
+    
     public void setDateOfBirth(LocalDate dateOfBirth) throws UnderageGuestException {
         long age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
         if (age < 18) {

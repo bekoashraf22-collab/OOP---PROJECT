@@ -8,7 +8,7 @@ import exceptions.UnderageGuestException;
 
 public class Receptionist extends Staff {
 
-    // FIX: Added UnderageGuestException to the throws clause
+    
     public Receptionist(String username, String password, LocalDate dateOfBirth, int workingHours) 
            throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         super(username, password, dateOfBirth, Role.RECEPTIONIST, workingHours);

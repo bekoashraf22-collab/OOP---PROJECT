@@ -316,7 +316,7 @@ public class Main {
     // AUTOMATED CHECKOUT 
     // ==========================================
     
-    // Notice the signature now takes BOTH the targetGuest and the performingUser
+    
     private static void handleAutomatedCheckout(Guest targetGuest, User performingUser, Scanner scanner) {
         List<Booking> myRooms = HotelDatabase.guestReservations.get(targetGuest.getUsername());
         
@@ -359,7 +359,7 @@ public class Main {
         if (pChoice.equals("1")) method = PaymentMethod.CASH;
         else if (pChoice.equals("2")) method = PaymentMethod.CREDIT_CARD;
         else if (pChoice.equals("3")) method = PaymentMethod.ONLINE;
-        
+
         try {
             // Deduct from the targetGuest's wallet
             targetGuest.processPayment(finalAmountDue, method);

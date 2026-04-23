@@ -9,7 +9,7 @@ public abstract class Staff extends User {
     private int workingHours;
     private Role role; 
 
-    // FIX: Added UnderageGuestException to the throws clause
+    
     public Staff(String username, String password, LocalDate dateOfBirth, Role role, int workingHours) 
            throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         
