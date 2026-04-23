@@ -42,7 +42,7 @@ public abstract class User {
     public void setDateOfBirth(LocalDate dateOfBirth) throws UnderageGuestException {
         long age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
         if (age < 18) {
-            throw new UnderageGuestException("Access Denied: User must be at least 18 years old. Calculated age: " + age);
+            throw new UnderageGuestException("User must be at least 18 years old. Calculated age: " + age);
         }
         this.dateOfBirth = dateOfBirth;
     }
