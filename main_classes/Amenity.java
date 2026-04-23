@@ -1,6 +1,4 @@
 package main_classes;
-
-
  
 public class Amenity {
     private String amenityId;
