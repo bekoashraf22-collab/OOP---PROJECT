@@ -24,6 +24,8 @@ public class Guest extends User {
         // Pass identity data to the User parent class
         super(username, password, dateOfBirth);
         
+        // FIX: Assign the passed balance to the object using your setter
+        setBalance(balance);
         
         this.address = address;
         this.gender = gender;
