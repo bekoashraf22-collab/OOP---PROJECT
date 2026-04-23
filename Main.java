@@ -77,12 +77,17 @@ public class Main {
                         System.out.print("Enter number of nights for this stay: ");
                         int nights = Integer.parseInt(scanner.nextLine().trim());
                         
+                        // Validates using InvalidDurationException
+                        Booking newBooking = new Booking(r, nights); 
+                        
                         r.setAvailable(false);
                         HotelDatabase.guestReservations.putIfAbsent(guestName, new ArrayList<>());
-                        HotelDatabase.guestReservations.get(guestName).add(new Booking(r, nights));
+                        HotelDatabase.guestReservations.get(guestName).add(newBooking);
                         
                         System.out.println("Success: Checked " + guestName + " into Room " + rNum + " for " + nights + " nights.");
                         HotelDatabase.logAction("Receptionist checked " + guestName + " into Room " + rNum);
+                    } catch (InvalidDurationException e) {
+                        System.out.println("Booking Error: " + e.getMessage());
                     } catch (NumberFormatException e) {
                         System.out.println("Error: Please enter a valid number for nights.");
                     }
@@ -140,10 +145,20 @@ public class Main {
                 }
                 try {
                     int idx = Integer.parseInt(scanner.nextLine().trim()) - 1;
+                    
+                    // Duplicate Check
+                    if (HotelDatabase.findRoom(rNum) != null) {
+                        throw new DuplicateRoomException("Room " + rNum + " already exists in the system!");
+                    }
+
                     HotelDatabase.rooms.add(new Room(rNum, HotelDatabase.roomTypes.get(idx)));
                     System.out.println("Success: Room " + rNum + " created.");
                     HotelDatabase.logAction("Admin added room " + rNum);
-                } catch (Exception e) { System.out.println("Error: Invalid selection."); }
+                } catch (DuplicateRoomException e) {
+                    System.out.println("Creation Failed: " + e.getMessage());
+                } catch (Exception e) { 
+                    System.out.println("Error: Invalid selection."); 
+                }
                 break;
 
             case "2": 
@@ -178,7 +193,7 @@ public class Main {
     }
 
     // ==========================================
-    // GUEST ACTIONS (UPDATED DISPLAYS)
+    // GUEST ACTIONS 
     // ==========================================
     private static boolean handleGuestActions(Guest guest, String choice, Scanner scanner) {
         switch (choice) {
@@ -190,13 +205,11 @@ public class Main {
                         System.out.println("Room " + r.getRoomNumber() + " [" + r.getRoomType().getTypeName() + 
                                            "] | Daily Total: $" + calculateDailyRate(r));
                         
-                        // Prints the exact amenities instead of just the number
                         if (r.getAmenities().isEmpty()) {
-                            System.out.println("   -> Amenities: None");
+                            System.out.println("   -> Amenities: None\n");
                         } else {
-                            System.out.println("   -> Amenities Included: " + r.getAmenities());
+                            System.out.println("   -> Amenities Included: " + r.getAmenities() + "\n");
                         }
-                        System.out.println(); // Adds a blank line for readability
                         found = true;
                     }
                 }
@@ -217,10 +230,8 @@ public class Main {
                     System.out.print("How many nights will you be staying? ");
                     int nights = Integer.parseInt(scanner.nextLine().trim());
                     
-                    if (nights <= 0) {
-                        System.out.println("Error: You must stay at least 1 night.");
-                        break;
-                    }
+                    // Safely validates the duration
+                    Booking newBooking = new Booking(bRoom, nights);
 
                     List<Booking> currentReservations = HotelDatabase.guestReservations.get(guest.getUsername());
                     double pendingDebt = 0;
@@ -239,14 +250,16 @@ public class Main {
                     
                     if (guest.getBalance() >= totalRequired) {
                         bRoom.setAvailable(false);
-                        currentReservations.add(new Booking(bRoom, nights));
+                        currentReservations.add(newBooking);
                         System.out.println("SUCCESS: Room " + bNum + " reserved for " + nights + " nights!");
                         HotelDatabase.logAction(guest.getUsername() + " reserved room " + bNum + " for " + nights + " nights");
                     } else {
                         System.out.println("BOOKING DENIED: You do not have enough funds.");
                     }
+                } catch (InvalidDurationException e) {
+                    System.out.println("Booking Error: " + e.getMessage());
                 } catch (NumberFormatException e) {
-                    System.out.println("Error: Invalid number of nights entered.");
+                    System.out.println("Error: Invalid number format.");
                 }
                 break;
 
@@ -262,7 +275,6 @@ public class Main {
                         System.out.println("Room " + b.getRoom().getRoomNumber() + " (" + b.getRoom().getRoomType().getTypeName() + ") | " + 
                                            "Nights: " + b.getNights() + " | Total: $" + totalForRoom);
                         
-                        // Shows the guest what they are paying for in their active bookings
                         if (b.getRoom().getAmenities().isEmpty()) {
                             System.out.println("   -> Amenities: None\n");
                         } else {
@@ -330,7 +342,6 @@ public class Main {
     // ==========================================
     // HELPERS
     // ==========================================
-    
     private static double calculateDailyRate(Room r) {
         double dailyTotal = r.getRoomType().getBasePrice();
         for (Amenity a : r.getAmenities()) {
@@ -345,17 +356,28 @@ public class Main {
         String u = scanner.nextLine().trim();
         System.out.print("Password: ");
         String p = scanner.nextLine().trim();
+        
         try {
+            System.out.print("Birth Year (YYYY): ");
+            int year = Integer.parseInt(scanner.nextLine().trim());
+            
             System.out.print("Initial Deposit: ");
             double b = Double.parseDouble(scanner.nextLine().trim());
-            Guest g = new Guest(u, p, LocalDate.of(2000, 1, 1), b, "Unknown", Gender.MALE, "None");
+            
+            // Unique Username Check
+            if (HotelDatabase.isUsernameTaken(u)) {
+                throw new DuplicateUsernameException("The username '" + u + "' is already taken.");
+            }
+
+            Guest g = new Guest(u, p, LocalDate.of(year, 1, 1), b, "Unknown", Gender.MALE, "None");
             HotelDatabase.guests.add(g);
             HotelDatabase.logAction("Registered guest: " + u);
             System.out.println("Account created successfully.");
-        } catch (WeakPasswordException | InvalidUsernameException e) {
-            System.out.println("Error: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Error creating account. Please check your inputs.");
+            
+        } catch (DuplicateUsernameException | UnderageGuestException | WeakPasswordException | InvalidUsernameException e) {
+            System.out.println("Registration Failed: " + e.getMessage());
+        } catch (NumberFormatException e) {
+            System.out.println("Registration Failed: Please enter valid numbers for Year and Deposit.");
         }
     }
 }

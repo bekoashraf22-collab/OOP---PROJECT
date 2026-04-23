@@ -2,13 +2,9 @@
 package main_classes;
 
 import java.time.LocalDate;
-
 import enums.Gender;
 import enums.PaymentMethod;
-import exceptions.WeakPasswordException;
-import exceptions.InvalidUsernameException;
-import exceptions.InvalidPaymentException;
-
+import exceptions.*; // This imports all your exceptions safely
 
 public class Guest extends User {
     private double balance;
@@ -16,23 +12,18 @@ public class Guest extends User {
     private Gender gender; 
     private String roomPreferences;
 
-    
+    // Exception is passed up the chain here
     public Guest(String username, String password, LocalDate dateOfBirth, 
                  double balance, String address, Gender gender, String roomPreferences) 
-                 throws WeakPasswordException, InvalidUsernameException {
+                 throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         
-        // Pass identity data to the User parent class
         super(username, password, dateOfBirth);
         
-        // FIX: Assign the passed balance to the object using your setter
         setBalance(balance);
-        
         this.address = address;
         this.gender = gender;
         this.roomPreferences = roomPreferences;
     }
-
-    
 
     public double getBalance() {
         return balance;
@@ -47,7 +38,6 @@ public class Guest extends User {
         }
     }
 
-    
     public Gender getGender() { return gender; }
     public void setGender(Gender gender) { this.gender = gender; }
     public String getAddress() { return address; }
@@ -55,7 +45,6 @@ public class Guest extends User {
     public String getRoomPreferences() { return roomPreferences; }
     public void setRoomPreferences(String roomPreferences) { this.roomPreferences = roomPreferences; }
 
-   
     @Override
     public void processPayment(double amount, PaymentMethod method) throws InvalidPaymentException {
         if (amount <= 0) {
@@ -67,7 +56,7 @@ public class Guest extends User {
         }
 
         this.balance -= amount;
-        System.out.println("Payment Successful! " + amount + " deducted via " + method);
+        System.out.println("Payment Successful! $" + amount + " deducted via " + method);
     }
 
     @Override

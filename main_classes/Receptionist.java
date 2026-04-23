@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import enums.Role;
 import exceptions.WeakPasswordException;
 import exceptions.InvalidUsernameException;
+import exceptions.UnderageGuestException;
 
 public class Receptionist extends Staff {
 
+    // FIX: Added UnderageGuestException to the throws clause
     public Receptionist(String username, String password, LocalDate dateOfBirth, int workingHours) 
-           throws WeakPasswordException, InvalidUsernameException {
+           throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         super(username, password, dateOfBirth, Role.RECEPTIONIST, workingHours);
     }
 
@@ -20,10 +22,9 @@ public class Receptionist extends Staff {
         System.out.println("3. Manage Room Keys");
         System.out.println("4. Logout");
     }
+    
     @Override
     public void processPayment(double amount, enums.PaymentMethod method) throws exceptions.InvalidPaymentException {
-        // Staff members don't process personal payments in this system
         System.out.println("Staff payment not applicable.");
     }
 }
-

@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import enums.Role;
 import exceptions.WeakPasswordException;
 import exceptions.InvalidUsernameException;
+import exceptions.UnderageGuestException;
 
 public class Admin extends Staff {
 
+    // FIX: Added UnderageGuestException to the throws clause
     public Admin(String username, String password, LocalDate dateOfBirth, int workingHours) 
-           throws WeakPasswordException, InvalidUsernameException {
+           throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         super(username, password, dateOfBirth, Role.ADMIN, workingHours);
     }
 
@@ -21,13 +23,12 @@ public class Admin extends Staff {
         System.out.println("4. Logout");
     }
 
-    // Task behavior for Member 2 to fill in later
     public void manageRooms() {
         System.out.println("Admin " + getUsername() + " is accessing room database.");
     }
+    
     @Override
     public void processPayment(double amount, enums.PaymentMethod method) throws exceptions.InvalidPaymentException {
-        // Staff members don't process personal payments in this system
         System.out.println("Staff payment not applicable.");
     }
 }

@@ -1,8 +1,8 @@
 package main_classes;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import enums.*;
+import java.time.temporal.ChronoUnit; // This import is now actively used below
+import enums.PaymentMethod;
 import exceptions.*;
 
 public abstract class User {
@@ -10,7 +10,7 @@ public abstract class User {
     private String password;
     private LocalDate dateOfBirth;
 
-    // Notice the new UnderageGuestException in the signature
+    // Exception is correctly declared here
     public User(String username, String password, LocalDate dateOfBirth) 
            throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         setUsername(username);
@@ -38,7 +38,7 @@ public abstract class User {
     
     public LocalDate getDateOfBirth() { return dateOfBirth; }
     
-    // The Age Verification Logic
+    // Exception is thrown here, using the ChronoUnit import properly
     public void setDateOfBirth(LocalDate dateOfBirth) throws UnderageGuestException {
         long age = ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
         if (age < 18) {

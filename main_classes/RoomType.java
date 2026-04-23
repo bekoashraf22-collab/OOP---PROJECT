@@ -29,3 +29,4 @@ public class RoomType {
     public String toString() {
         return typeName + " - $" + basePrice + "/night";
     }
+}
