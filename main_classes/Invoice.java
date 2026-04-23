@@ -7,12 +7,13 @@ import java.util.List;
 public class Invoice {
     private String invoiceId;
     private Guest guest;
-    private List<Booking> bookings; 
+    // FIXED: Now uses a List of Reservations instead of Booking
+    private List<Reservations> bookings; 
     private double taxRate = 0.14;  
     private double discount;
     private LocalDateTime issuedDate;
 
-    public Invoice(String invoiceId, Guest guest, List<Booking> bookings, double discount) {
+    public Invoice(String invoiceId, Guest guest, List<Reservations> bookings, double discount) {
         this.invoiceId = invoiceId;
         this.guest = guest;
         this.bookings = bookings;
@@ -20,27 +21,20 @@ public class Invoice {
         this.issuedDate = LocalDateTime.now();
     }
 
-    // Helper method to calculate the base price
     private double calculateBasePrice() {
         double total = 0;
-        for (Booking b : bookings) {
-            double dailyRate = b.getRoom().getRoomType().getBasePrice();
-            for (Amenity a : b.getRoom().getAmenities()) {
-                dailyRate += a.getExtraCost();
-            }
-            total += (dailyRate * b.getNights());
+        for (Reservations b : bookings) {
+            total += b.calculateTotalPrice(); // Uses teammate's math!
         }
         return total;
     }
 
-    // Method to calculate price after tax and discount
     public double calculateFinalAmount() {
         double basePrice = calculateBasePrice(); 
         double taxAmount = basePrice * taxRate;
         return (basePrice + taxAmount) - discount;
     }
 
-    // Method to print the bill 
     public void printInvoice() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
@@ -52,8 +46,8 @@ public class Invoice {
         System.out.println("Guest Name : " + guest.getUsername());
         System.out.println("-----------------------------------------");
         
-        for (Booking b : bookings) {
-            System.out.println("Room " + b.getRoom().getRoomNumber() + " (" + b.getNights() + " nights)");
+        for (Reservations b : bookings) {
+            System.out.println("Room " + b.getRoom().getRoomNumber() + " (" + b.calculateTotalNights() + " nights)");
         }
         
         System.out.println("-----------------------------------------");

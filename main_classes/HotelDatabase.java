@@ -16,7 +16,7 @@ public class HotelDatabase {
     public static List<Room> rooms = new ArrayList<>();
     public static List<Amenity> globalAmenities = new ArrayList<>();
     
-    public static Map<String, List<Booking>> guestReservations = new HashMap<>();
+    public static Map<String, List<Reservations>> guestReservations = new HashMap<>();
     public static List<String> systemLogs = new ArrayList<>();
 
     static {
