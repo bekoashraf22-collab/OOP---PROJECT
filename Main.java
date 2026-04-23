@@ -60,11 +60,9 @@ public class Main {
         }
     }
 
+  
     // ==========================================
-    // RECEPTIONIST ACTIONS
-    // ==========================================
-    // ==========================================
-    // RECEPTIONIST ACTIONS (BULLETPROOF VERSION)
+    // RECEPTIONIST ACTIONS 
     // ==========================================
     private static boolean handleReceptionistActions(Receptionist receptionist, String choice, Scanner scanner) {
         switch (choice) {
@@ -315,7 +313,7 @@ public class Main {
     }
 
     // ==========================================
-    // AUTOMATED CHECKOUT (WITH ROLE-BASED ACCESS CONTROL)
+    // AUTOMATED CHECKOUT 
     // ==========================================
     
     // Notice the signature now takes BOTH the targetGuest and the performingUser
@@ -361,7 +359,7 @@ public class Main {
         if (pChoice.equals("1")) method = PaymentMethod.CASH;
         else if (pChoice.equals("2")) method = PaymentMethod.CREDIT_CARD;
         else if (pChoice.equals("3")) method = PaymentMethod.ONLINE;
-
+        
         try {
             // Deduct from the targetGuest's wallet
             targetGuest.processPayment(finalAmountDue, method);

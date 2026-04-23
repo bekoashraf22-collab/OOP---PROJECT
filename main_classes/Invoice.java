@@ -40,7 +40,7 @@ public class Invoice {
         return (basePrice + taxAmount) - discount;
     }
 
-    // Method to print the bill (Adapted from teammate's code)
+    // Method to print the bill 
     public void printInvoice() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         
