@@ -63,11 +63,29 @@ public class Main {
     // ==========================================
     // RECEPTIONIST ACTIONS
     // ==========================================
+    // ==========================================
+    // RECEPTIONIST ACTIONS (BULLETPROOF VERSION)
+    // ==========================================
     private static boolean handleReceptionistActions(Receptionist receptionist, String choice, Scanner scanner) {
         switch (choice) {
-            case "1": 
+            case "1": // CHECK-IN
                 System.out.print("Enter Guest Username to check-in: ");
-                String guestName = scanner.nextLine().trim();
+                String checkinName = scanner.nextLine().trim();
+                
+                // 1. STRICT GUEST VERIFICATION: Find their exact official username
+                Guest actualGuest = null;
+                for (Guest g : HotelDatabase.guests) {
+                    if (g.getUsername().equalsIgnoreCase(checkinName)) {
+                        actualGuest = g;
+                        break;
+                    }
+                }
+                
+                if (actualGuest == null) {
+                    System.out.println("Error: Guest '" + checkinName + "' not found. They must register first!");
+                    break;
+                }
+
                 System.out.print("Enter Room Number to assign: ");
                 String rNum = scanner.nextLine().trim();
                 
@@ -77,15 +95,17 @@ public class Main {
                         System.out.print("Enter number of nights for this stay: ");
                         int nights = Integer.parseInt(scanner.nextLine().trim());
                         
-                        // Validates using InvalidDurationException
                         Booking newBooking = new Booking(r, nights); 
                         
                         r.setAvailable(false);
-                        HotelDatabase.guestReservations.putIfAbsent(guestName, new ArrayList<>());
-                        HotelDatabase.guestReservations.get(guestName).add(newBooking);
                         
-                        System.out.println("Success: Checked " + guestName + " into Room " + rNum + " for " + nights + " nights.");
-                        HotelDatabase.logAction("Receptionist checked " + guestName + " into Room " + rNum);
+                        // Use the EXACT official username to prevent case-sensitivity bugs
+                        String officialName = actualGuest.getUsername();
+                        HotelDatabase.guestReservations.putIfAbsent(officialName, new ArrayList<>());
+                        HotelDatabase.guestReservations.get(officialName).add(newBooking);
+                        
+                        System.out.println("Success: Checked " + officialName + " into Room " + rNum + " for " + nights + " nights.");
+                        HotelDatabase.logAction("Receptionist checked " + officialName + " into Room " + rNum);
                     } catch (InvalidDurationException e) {
                         System.out.println("Booking Error: " + e.getMessage());
                     } catch (NumberFormatException e) {
@@ -96,24 +116,26 @@ public class Main {
                 }
                 break;
 
-            case "2": 
+            case "2": // RECEPTIONIST CHECK-OUT
                 System.out.print("Enter Guest Username to check-out: ");
                 String checkoutName = scanner.nextLine().trim();
-                List<Booking> gRooms = HotelDatabase.guestReservations.get(checkoutName); 
                 
-                if (gRooms != null && !gRooms.isEmpty()) {
-                    for (Booking booking : gRooms) {
-                        booking.getRoom().setAvailable(true); 
+                Guest guestToCheckout = null;
+                for (Guest g : HotelDatabase.guests) {
+                    if (g.getUsername().equalsIgnoreCase(checkoutName)) {
+                        guestToCheckout = g;
+                        break;
                     }
-                    gRooms.clear();
-                    System.out.println("Success: Guest " + checkoutName + " has been checked out of all rooms.");
-                    HotelDatabase.logAction("Receptionist checked out " + checkoutName);
+                }
+                
+                if (guestToCheckout != null) {
+                    handleAutomatedCheckout(guestToCheckout, receptionist, scanner);
                 } else {
-                    System.out.println("Error: No active reservations found for this guest.");
+                    System.out.println("Error: Guest account not found in the system.");
                 }
                 break;
 
-            case "3": 
+            case "3": // MANAGE KEYS
                 System.out.println("\n--- OCCUPIED ROOMS (KEY MANAGEMENT) ---");
                 boolean anyOccupied = false;
                 for (Room room : HotelDatabase.rooms) {
@@ -146,7 +168,6 @@ public class Main {
                 try {
                     int idx = Integer.parseInt(scanner.nextLine().trim()) - 1;
                     
-                    // Duplicate Check
                     if (HotelDatabase.findRoom(rNum) != null) {
                         throw new DuplicateRoomException("Room " + rNum + " already exists in the system!");
                     }
@@ -230,7 +251,6 @@ public class Main {
                     System.out.print("How many nights will you be staying? ");
                     int nights = Integer.parseInt(scanner.nextLine().trim());
                     
-                    // Safely validates the duration
                     Booking newBooking = new Booking(bRoom, nights);
 
                     List<Booking> currentReservations = HotelDatabase.guestReservations.get(guest.getUsername());
@@ -285,7 +305,8 @@ public class Main {
                 break;
 
             case "4": 
-                handleAutomatedCheckout(guest, scanner);
+                // We pass 'guest' TWICE. Once as the target account, and once as the "Performing User"
+                handleAutomatedCheckout(guest, guest, scanner);
                 break;
 
             case "5": return false;
@@ -294,22 +315,42 @@ public class Main {
     }
 
     // ==========================================
-    // AUTOMATED CHECKOUT
+    // AUTOMATED CHECKOUT (WITH ROLE-BASED ACCESS CONTROL)
     // ==========================================
-    private static void handleAutomatedCheckout(Guest guest, Scanner scanner) {
-        List<Booking> myRooms = HotelDatabase.guestReservations.get(guest.getUsername());
+    
+    // Notice the signature now takes BOTH the targetGuest and the performingUser
+    private static void handleAutomatedCheckout(Guest targetGuest, User performingUser, Scanner scanner) {
+        List<Booking> myRooms = HotelDatabase.guestReservations.get(targetGuest.getUsername());
+        
         if (myRooms == null || myRooms.isEmpty()) {
-            System.out.println("You have no active reservations to pay for.");
+            System.out.println("No active reservations to pay for.");
             return;
         }
 
-        double grandTotal = 0;
-        for (Booking b : myRooms) {
-            grandTotal += (calculateDailyRate(b.getRoom()) * b.getNights());
+        String invoiceId = "INV-" + System.currentTimeMillis() % 100000;
+        double discountAmount = 0.0;
+        
+        // --- ROLE BASED ACCESS CONTROL ---
+        // Only ask for a discount if the person pushing the buttons is a Staff member!
+        if (performingUser instanceof Staff) {
+            try {
+                System.out.print("STAFF OVERRIDE: Enter discount amount to apply (Enter 0 for none): $");
+                discountAmount = Double.parseDouble(scanner.nextLine().trim());
+                if (discountAmount < 0) {
+                    System.out.println("Invalid discount. Setting to $0.0");
+                    discountAmount = 0.0;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input. No discount applied.");
+            }
         }
-
-        System.out.println("\n--- AUTOMATED CHECKOUT ---");
-        System.out.println("Total Outstanding Balance: $" + grandTotal);
+        // ----------------------------------
+        
+        // Create the Invoice using the targetGuest's account
+        Invoice currentInvoice = new Invoice(invoiceId, targetGuest, myRooms, discountAmount);
+        
+        currentInvoice.printInvoice();
+        double finalAmountDue = currentInvoice.calculateFinalAmount();
         
         System.out.println("Select Payment Method:");
         System.out.println("1. Cash\n2. Credit Card\n3. Online Payment");
@@ -322,14 +363,15 @@ public class Main {
         else if (pChoice.equals("3")) method = PaymentMethod.ONLINE;
 
         try {
-            guest.processPayment(grandTotal, method);
+            // Deduct from the targetGuest's wallet
+            targetGuest.processPayment(finalAmountDue, method);
             
             for (Booking b : myRooms) {
                 b.getRoom().setAvailable(true); 
             }
             myRooms.clear();
             
-            HotelDatabase.logAction(guest.getUsername() + " checked out and paid $" + grandTotal);
+            HotelDatabase.logAction(performingUser.getUsername() + " processed checkout for " + targetGuest.getUsername() + ". Invoice " + invoiceId + " paid.");
             System.out.println("CHECKOUT SUCCESSFUL! Thank you for staying with us.");
             
         } catch (InvalidPaymentException e) {
@@ -364,7 +406,6 @@ public class Main {
             System.out.print("Initial Deposit: ");
             double b = Double.parseDouble(scanner.nextLine().trim());
             
-            // Unique Username Check
             if (HotelDatabase.isUsernameTaken(u)) {
                 throw new DuplicateUsernameException("The username '" + u + "' is already taken.");
             }

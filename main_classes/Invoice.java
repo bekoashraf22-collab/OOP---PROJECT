@@ -1,51 +1,67 @@
 package main_classes;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Invoice {
     private String invoiceId;
-    private Reservations reservation;
-    private double taxRate = 0.14;    // 14% standard tax
+    private Guest guest;
+    private List<Booking> bookings; 
+    private double taxRate = 0.14;  
     private double discount;
     private LocalDateTime issuedDate;
 
-    public Invoice(String invoiceId, Reservations reservation, double discount) {
+    public Invoice(String invoiceId, Guest guest, List<Booking> bookings, double discount) {
         this.invoiceId = invoiceId;
-        this.reservation = reservation;
+        this.guest = guest;
+        this.bookings = bookings;
         this.discount = discount;
         this.issuedDate = LocalDateTime.now();
     }
 
-    //Method to calculate price after tax and discount
+    // Helper method to calculate the base price
+    private double calculateBasePrice() {
+        double total = 0;
+        for (Booking b : bookings) {
+            double dailyRate = b.getRoom().getRoomType().getBasePrice();
+            for (Amenity a : b.getRoom().getAmenities()) {
+                dailyRate += a.getExtraCost();
+            }
+            total += (dailyRate * b.getNights());
+        }
+        return total;
+    }
+
+    // Method to calculate price after tax and discount
     public double calculateFinalAmount() {
-        double basePrice = reservation.calculateTotalPrice(); // بينادي الميثود اللي عملناها سوا
+        double basePrice = calculateBasePrice(); 
         double taxAmount = basePrice * taxRate;
         return (basePrice + taxAmount) - discount;
     }
 
-    // Method to print the bill
+    // Method to print the bill (Adapted from teammate's code)
     public void printInvoice() {
-        System.out.println("----- HOTEL INVOICE -----");
-        System.out.println("Invoice ID: " + invoiceId);
-        System.out.println("Guest: " + reservation.getGuest().getUsername());
-        System.out.println("Room: " + reservation.getRoom().getRoomNumber());
-        System.out.println("Total Price: " + reservation.calculateTotalPrice() + " EGP");
-        System.out.println("Final (with Tax & Discount): " + calculateFinalAmount() + " EGP");
-        System.out.println("Issued on: " + issuedDate);
-        System.out.println("-------------------------");
-    }
-    public void processPayment() {
-        double finalAmount = calculateFinalAmount();
-        double guestBalance = reservation.getGuest().getBalance(); //
-
-        if (guestBalance < finalAmount) {
-            // customized exception for the app to not crash
-            System.out.println("Payment Failed: Insufficient balance!");
-        } else {
-            // updating balance and reservation status
-            reservation.getGuest().setBalance(guestBalance - finalAmount);
-            reservation.setStatus(enums.ReservationStatus.COMPLETED);
-            System.out.println("Payment Successful! Reservation is now COMPLETED.");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        
+        System.out.println("\n=========================================");
+        System.out.println("             HOTEL INVOICE               ");
+        System.out.println("=========================================");
+        System.out.println("Invoice ID : " + invoiceId);
+        System.out.println("Date       : " + issuedDate.format(formatter));
+        System.out.println("Guest Name : " + guest.getUsername());
+        System.out.println("-----------------------------------------");
+        
+        for (Booking b : bookings) {
+            System.out.println("Room " + b.getRoom().getRoomNumber() + " (" + b.getNights() + " nights)");
         }
+        
+        System.out.println("-----------------------------------------");
+        System.out.println("Subtotal   : $" + String.format("%.2f", calculateBasePrice()));
+        System.out.println("Tax (14%)  : $" + String.format("%.2f", (calculateBasePrice() * taxRate)));
+        System.out.println("Discount   : -$" + String.format("%.2f", discount));
+        System.out.println("-----------------------------------------");
+        System.out.println("FINAL DUE  : $" + String.format("%.2f", calculateFinalAmount()));
+        System.out.println("=========================================\n");
     }
 }

@@ -4,7 +4,7 @@ package main_classes;
 import java.time.LocalDate;
 import enums.Gender;
 import enums.PaymentMethod;
-import exceptions.*; // This imports all your exceptions safely
+import exceptions.*; 
 
 public class Guest extends User {
     private double balance;

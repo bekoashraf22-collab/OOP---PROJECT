@@ -23,7 +23,7 @@ public class Room {
     public void setRoomType(RoomType roomType) { this.roomType = roomType; }
 
     public List<Amenity> getAmenities() { return amenities; }
-    // Note: Usually, we don't set the whole list, we add/remove individual items.
+    
     
     public boolean isAvailable() { return isAvailable; }
     public void setAvailable(boolean available) { isAvailable = available; }

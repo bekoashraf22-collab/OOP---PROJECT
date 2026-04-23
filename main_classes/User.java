@@ -1,7 +1,7 @@
 package main_classes;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit; // This import is now actively used below
+import java.time.temporal.ChronoUnit; 
 import enums.PaymentMethod;
 import exceptions.*;
 
@@ -10,7 +10,7 @@ public abstract class User {
     private String password;
     private LocalDate dateOfBirth;
 
-    // Exception is correctly declared here
+    
     public User(String username, String password, LocalDate dateOfBirth) 
            throws WeakPasswordException, InvalidUsernameException, UnderageGuestException {
         setUsername(username);
