@@ -1,24 +1,23 @@
 package main_classes;
- 
+
+import exceptions.InvalidPricingException;
+
 public class Amenity {
     private String amenityId;
-    private String name; // e.g., "WiFi", "Mini-bar"
-    private double extraCost; // Optional, but good for a reservation system
+    private String name; 
+    private double extraCost; 
 
-    // Constructor
-    public Amenity(String amenityId, String name, double extraCost) {
+    public Amenity(String amenityId, String name, double extraCost) throws InvalidPricingException {
+        if (extraCost < 0) throw new InvalidPricingException("Amenity cost cannot be negative.");
         this.amenityId = amenityId;
         this.name = name;
         this.extraCost = extraCost;
     }
 
-    // Getters and Setters (Encapsulation)
     public String getAmenityId() { return amenityId; }
     public void setAmenityId(String amenityId) { this.amenityId = amenityId; }
-
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
-
     public double getExtraCost() { return extraCost; }
     public void setExtraCost(double extraCost) { this.extraCost = extraCost; }
 
