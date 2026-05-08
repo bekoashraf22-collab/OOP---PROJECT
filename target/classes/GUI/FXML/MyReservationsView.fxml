@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.MyReservationsController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="📌 My Reservations" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Checkout" onAction="#checkout"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="20" styleClass="content"><VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Reservations" styleClass="nav-title"/><ListView fx:id="reservationsList" prefHeight="560"/></VBox><VBox spacing="10" styleClass="card" prefWidth="390"><Label text="Details" styleClass="nav-title"/><Label fx:id="detailLabel" text="Select a reservation." wrapText="true" styleClass="subtitle"/></VBox></HBox></center>
+</BorderPane>

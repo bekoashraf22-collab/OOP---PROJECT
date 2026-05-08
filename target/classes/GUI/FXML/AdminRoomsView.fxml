@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.AdminRoomsController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="🏨 Room Management" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="22" styleClass="content">
+        <VBox spacing="12" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Rooms" styleClass="nav-title"/><ListView fx:id="roomsList" prefHeight="520"/><Button text="Remove Selected Room" onAction="#removeRoom" styleClass="danger-button"/></VBox>
+        <VBox spacing="12" styleClass="card" prefWidth="420"><Label text="Selected Room Details" styleClass="nav-title"/><Label fx:id="detailsLabel" text="Select a room." wrapText="true" styleClass="subtitle"/>
+            <Label text="Add New Room" styleClass="nav-title"/>
+            <Label text="Room Number" styleClass="input-label"/><TextField fx:id="roomNumberField" promptText="e.g. 301"/>
+            <Label text="Room Type" styleClass="input-label"/><ComboBox fx:id="typeBox" maxWidth="Infinity"/>
+            <Label text="Room Capacity" styleClass="input-label"/><TextField fx:id="capacityField" promptText="How many people can stay?"/>
+            <Button text="Add Room" onAction="#addRoom" maxWidth="Infinity"/>
+        </VBox>
+    </HBox></center>
+</BorderPane>

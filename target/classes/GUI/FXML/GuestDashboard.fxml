@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.GuestDashboardController">
+    <left><VBox styleClass="side"><Label text="✦ Guest" styleClass="nav-title"/><Button text="🛏 Available Rooms" onAction="#availableRooms" maxWidth="Infinity"/><Button text="➕ Make Reservation" onAction="#makeReservation" maxWidth="Infinity"/><Button text="📌 My Reservations" onAction="#myReservations" maxWidth="Infinity"/><Button text="🧾 Checkout &amp; Pay" onAction="#checkout" maxWidth="Infinity"/><Region VBox.vgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button" maxWidth="Infinity"/></VBox></left>
+    <center><VBox spacing="24" styleClass="content"><Label fx:id="welcomeLabel" styleClass="title"/><Label text="Guest booking dashboard" styleClass="subtitle"/>
+        <HBox spacing="18"><VBox styleClass="small-card"><Label text="Balance" styleClass="metric-name"/><Label fx:id="balanceLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="My reservations" styleClass="metric-name"/><Label fx:id="reservationsLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="Available rooms" styleClass="metric-name"/><Label fx:id="availableLabel" styleClass="metric"/></VBox></HBox>
+        <VBox styleClass="card" spacing="12"><Label text="Book, review, and pay" styleClass="nav-title"/><Label text="Browse available rooms, make a reservation after the balance check, see your bookings, then checkout with invoice tax/payment processing." wrapText="true" styleClass="subtitle"/></VBox>
+    </VBox></center>
+</BorderPane>

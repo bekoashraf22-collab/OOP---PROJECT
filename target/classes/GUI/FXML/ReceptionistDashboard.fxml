@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.ReceptionistDashboardController">
+    <left><VBox styleClass="side"><Label text="✦ Front Desk" styleClass="nav-title"/><Button text="✅ Check-in Guest" onAction="#checkIn" maxWidth="Infinity"/><Button text="🧾 Check-out Guest" onAction="#checkOut" maxWidth="Infinity"/><Button text="🔑 Key Management" onAction="#keys" maxWidth="Infinity"/><Button text="👥 Create Staff" onAction="#accounts" maxWidth="Infinity"/><Region VBox.vgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button" maxWidth="Infinity"/></VBox></left>
+    <center><VBox spacing="24" styleClass="content"><Label fx:id="welcomeLabel" styleClass="title"/><Label text="Receptionist desk dashboard" styleClass="subtitle"/>
+        <HBox spacing="18"><VBox styleClass="small-card"><Label text="Guests" styleClass="metric-name"/><Label fx:id="guestCountLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="Available" styleClass="metric-name"/><Label fx:id="availableLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="Occupied" styleClass="metric-name"/><Label fx:id="occupiedLabel" styleClass="metric"/></VBox></HBox>
+        <VBox styleClass="card" spacing="12"><Label text="Front desk actions" styleClass="nav-title"/><Label text="Check guests into rooms, process checkouts with staff discounts, and view occupied rooms for key management." wrapText="true" styleClass="subtitle"/></VBox>
+    </VBox></center>
+</BorderPane>

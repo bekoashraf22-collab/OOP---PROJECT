@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.CheckoutController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="🧾 Checkout &amp; Payment" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="20" styleClass="content"><VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Invoice Items" styleClass="nav-title"/><ListView fx:id="invoiceList" prefHeight="470"/><Label fx:id="totalLabel" styleClass="subtitle"/></VBox><VBox spacing="12" styleClass="card" prefWidth="360"><Label text="Payment" styleClass="nav-title"/><Label text="Method" styleClass="input-label"/><ComboBox fx:id="paymentBox" maxWidth="Infinity"/><Label text="Discounts can only be applied by staff during staff check-out." wrapText="true" styleClass="subtitle"/><Button fx:id="checkoutButton" text="Pay &amp; Checkout" onAction="#pay" maxWidth="Infinity"/></VBox></HBox></center>
+</BorderPane>

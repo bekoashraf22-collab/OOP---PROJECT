@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.LoginController" styleClass="login-page">
+    <center>
+        <StackPane styleClass="login-shell">
+            <HBox alignment="CENTER" spacing="0" maxWidth="920" styleClass="login-window">
+                <VBox alignment="CENTER" spacing="18" prefWidth="380" styleClass="login-brand-panel">
+                    <Label text="L" styleClass="login-logo" />
+                    <VBox alignment="CENTER" spacing="2">
+                        <Label text="Luxora" styleClass="brand-title" />
+                        <Label text="Hotel System" styleClass="brand-subtitle" />
+                    </VBox>
+                </VBox>
+
+                <VBox spacing="18" prefWidth="390" styleClass="login-card">
+                    <Label text="Login" styleClass="login-title" />
+
+                    <VBox spacing="7">
+                        <Label text="Username" styleClass="input-label" />
+                        <TextField fx:id="usernameField" promptText="Username" />
+                    </VBox>
+
+                    <VBox spacing="7">
+                        <Label text="Password" styleClass="input-label" />
+                        <PasswordField fx:id="passwordField" promptText="Password" />
+                    </VBox>
+
+                    <Button fx:id="loginButton" text="Login" maxWidth="Infinity" onAction="#login" styleClass="primary-login-button" />
+                    <Label fx:id="statusLabel" text="" wrapText="true" styleClass="status-text" />
+                    <Button text="Create guest account" maxWidth="Infinity" onAction="#openRegister" styleClass="ghost-button" />
+                </VBox>
+            </HBox>
+        </StackPane>
+    </center>
+</BorderPane>

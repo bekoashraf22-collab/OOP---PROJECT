@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run Hotel JavaFX GUI",
+            "request": "launch",
+            "mainClass": "GUI.CODE.HotelApp",
+            "projectName": "hotel-management-javafx"
+        },
+        {
+            "type": "java",
+            "name": "Run Old Console Main",
+            "request": "launch",
+            "mainClass": "Main",
+            "projectName": "hotel-management-javafx"
+        }
+    ]
+}

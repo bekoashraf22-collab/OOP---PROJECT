@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.RegisterController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Back" onAction="#back" styleClass="ghost-button"/><Label fx:id="titleLabel" text="Create Account" styleClass="title"/></HBox></top>
+    <center><VBox spacing="18" styleClass="content" maxWidth="760">
+        <VBox spacing="12" styleClass="card">
+            <Label text="Account Type" styleClass="nav-title"/>
+            <ComboBox fx:id="accountTypeBox" maxWidth="Infinity"/>
+            <Label fx:id="staffHelpLabel" wrapText="true" styleClass="subtitle"/>
+        </VBox>
+        <GridPane hgap="16" vgap="12">
+            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0"><Label text="Username" styleClass="input-label"/><TextField fx:id="usernameField"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0"><Label text="Password" styleClass="input-label"/><PasswordField fx:id="passwordField"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1"><Label text="Date of Birth" styleClass="input-label"/><DatePicker fx:id="dobPicker" maxWidth="Infinity"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1"><Label text="Gender" styleClass="input-label"/><ComboBox fx:id="genderBox" maxWidth="Infinity"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2"><Label text="Initial Balance (Guests)" styleClass="input-label"/><TextField fx:id="balanceField"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2"><Label text="Address (Guests)" styleClass="input-label"/><TextField fx:id="addressField"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3"><Label text="Working Hours (Staff/Admin)" styleClass="input-label"/><TextField fx:id="workingHoursField"/></VBox>
+            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3"><Label text="Override Key (Staff/Admin)" styleClass="input-label"/><PasswordField fx:id="overrideKeyField"/></VBox>
+        </GridPane>
+        <Button fx:id="registerButton" text="Create Account" onAction="#register" maxWidth="Infinity" />
+    </VBox></center>
+</BorderPane>
