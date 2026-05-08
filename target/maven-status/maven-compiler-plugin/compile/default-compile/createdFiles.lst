@@ -10,6 +10,7 @@ exceptions\InvalidUsernameException.class
 GUI\Controllers\AvailableRoomsController$1.class
 GUI\Services\HotelGuiService$InvoiceResult.class
 exceptions\InvalidDurationException.class
+GUI\Controllers\ExtensionRequestsController.class
 main_classes\RoomType.class
 GUI\Controllers\LogsController.class
 main_classes\Reservations.class
@@ -24,8 +25,10 @@ GUI\Controllers\AdminRoomsController$1.class
 main_classes\HotelDatabase.class
 GUI\Services\AppSession.class
 exceptions\DuplicateRoomException.class
+GUI\Controllers\StaffBalanceController$1.class
 GUI\CODE\HotelApp.class
 GUI\Controllers\StaffCheckoutController$1.class
+GUI\Controllers\StaffBalanceController.class
 main_classes\Invoice.class
 main_classes\Admin.class
 main_classes\Receptionist.class
@@ -46,8 +49,10 @@ exceptions\DuplicateUsernameException.class
 GUI\Controllers\GuestDashboardController.class
 GUI\Controllers\RegisterController.class
 GUI\Controllers\CheckInController$1.class
+GUI\Controllers\CreditCardController.class
 main_classes\Amenity.class
 GUI\Controllers\ReceptionistDashboardController.class
+GUI\Controllers\ExtensionRequestsController$1.class
 GUI\Controllers\MyReservationsController$1.class
 GUI\Controllers\MyReservationsController.class
 GUI\Controllers\StaffCheckoutController.class

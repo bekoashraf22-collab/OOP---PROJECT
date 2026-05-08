@@ -8,14 +8,19 @@ import GUI.Util.GuiUtils;
 import enums.Gender;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.VBox;
 import main_classes.Admin;
 import main_classes.Receptionist;
+
 import java.time.LocalDate;
 
 public class RegisterController {
     @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private DatePicker dobPicker;
+    @FXML private TextField cardNumberField;
+    @FXML private TextField expiryField;
+    @FXML private PasswordField cvvField;
     @FXML private TextField balanceField;
     @FXML private TextField addressField;
     @FXML private ComboBox<Gender> genderBox;
@@ -25,6 +30,8 @@ public class RegisterController {
     @FXML private Label staffHelpLabel;
     @FXML private Label titleLabel;
     @FXML private Button registerButton;
+    @FXML private VBox guestDetailsBox;
+    @FXML private VBox staffDetailsBox;
 
     @FXML
     private void initialize() {
@@ -41,12 +48,14 @@ public class RegisterController {
 
     private void updateMode() {
         String type = accountTypeBox.getValue();
-        boolean staffAccount = !"Guest".equals(type);
-        titleLabel.setText(staffAccount ? "Create Staff/Admin Account" : "Create Guest Account");
-        registerButton.setText(staffAccount ? "Create " + type + " Account" : "Create Guest Account");
-        staffHelpLabel.setText(staffAccount
-                ? "Override rules: ADMIN-2026 can create Admin or Receptionist. STAFF-2026 can create Receptionist only."
-                : "Guest accounts do not need an override key.");
+        boolean guestAccount = "Guest".equals(type);
+        titleLabel.setText(guestAccount ? "Create Guest Account" : "Create " + type + " Account");
+        registerButton.setText(guestAccount ? "Create Guest" : "Create " + type);
+        staffHelpLabel.setText(guestAccount ? "" : "Admin key creates admin/receptionist. Staff key creates receptionist only.");
+        guestDetailsBox.setVisible(guestAccount);
+        guestDetailsBox.setManaged(guestAccount);
+        staffDetailsBox.setVisible(!guestAccount);
+        staffDetailsBox.setManaged(!guestAccount);
     }
 
     @FXML
@@ -63,11 +72,13 @@ public class RegisterController {
                 String address = addressField.getText().trim().isEmpty() ? "Unknown" : addressField.getText().trim();
                 Gender gender = genderBox.getValue();
                 AsyncService.runAsync(() -> {
-                    try { return HotelGuiService.registerGuest(username, password, dob, balance, address, gender); }
-                    catch (Exception e) { throw new RuntimeException(e); }
+                    try {
+                        return HotelGuiService.registerGuestWithCard(username, password, dob, address, gender,
+                                cardNumberField.getText(), expiryField.getText(), cvvField.getText(), balance);
+                    } catch (Exception e) { throw new RuntimeException(e); }
                 }, guest -> {
                     registerButton.setDisable(false);
-                    GuiUtils.info("Account Created", "Guest account created successfully.");
+                    GuiUtils.info("Account Created", "Guest account created.");
                     goBackAfterCreate();
                 }, error -> showRegistrationError(error));
             } else {
@@ -79,7 +90,7 @@ public class RegisterController {
                     catch (Exception e) { throw new RuntimeException(e); }
                 }, staff -> {
                     registerButton.setDisable(false);
-                    GuiUtils.info("Account Created", type + " account created successfully.");
+                    GuiUtils.info("Account Created", type + " account created.");
                     goBackAfterCreate();
                 }, error -> showRegistrationError(error));
             }

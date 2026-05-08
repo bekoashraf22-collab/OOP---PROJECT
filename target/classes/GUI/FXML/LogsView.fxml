@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.LogsController">
-    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="📜 System Logs" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Refresh" onAction="#refresh"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
-    <center><VBox styleClass="content"><ListView fx:id="logsList" prefHeight="620"/></VBox></center>
-</BorderPane>

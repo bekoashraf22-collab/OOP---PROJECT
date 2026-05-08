@@ -8,16 +8,34 @@
             <ComboBox fx:id="accountTypeBox" maxWidth="Infinity"/>
             <Label fx:id="staffHelpLabel" wrapText="true" styleClass="subtitle"/>
         </VBox>
+
         <GridPane hgap="16" vgap="12">
             <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0"><Label text="Username" styleClass="input-label"/><TextField fx:id="usernameField"/></VBox>
             <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0"><Label text="Password" styleClass="input-label"/><PasswordField fx:id="passwordField"/></VBox>
             <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1"><Label text="Date of Birth" styleClass="input-label"/><DatePicker fx:id="dobPicker" maxWidth="Infinity"/></VBox>
-            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1"><Label text="Gender" styleClass="input-label"/><ComboBox fx:id="genderBox" maxWidth="Infinity"/></VBox>
-            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2"><Label text="Initial Balance (Guests)" styleClass="input-label"/><TextField fx:id="balanceField"/></VBox>
-            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2"><Label text="Address (Guests)" styleClass="input-label"/><TextField fx:id="addressField"/></VBox>
-            <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="3"><Label text="Working Hours (Staff/Admin)" styleClass="input-label"/><TextField fx:id="workingHoursField"/></VBox>
-            <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="3"><Label text="Override Key (Staff/Admin)" styleClass="input-label"/><PasswordField fx:id="overrideKeyField"/></VBox>
         </GridPane>
+
+        <VBox fx:id="guestDetailsBox" spacing="14" styleClass="card">
+            <Label text="Guest Details" styleClass="nav-title"/>
+            <GridPane hgap="16" vgap="12">
+                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0"><Label text="Gender" styleClass="input-label"/><ComboBox fx:id="genderBox" maxWidth="Infinity"/></VBox>
+                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0"><Label text="Address" styleClass="input-label"/><TextField fx:id="addressField"/></VBox>
+                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="1"><Label text="Card Number" styleClass="input-label"/><TextField fx:id="cardNumberField" promptText="1234 5678 9012 3456"/></VBox>
+                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="1"><Label text="Expiry" styleClass="input-label"/><TextField fx:id="expiryField" promptText="MM/YY"/></VBox>
+                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="2"><Label text="CVV" styleClass="input-label"/><PasswordField fx:id="cvvField" promptText="123"/></VBox>
+                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="2"><Label text="Starting Balance" styleClass="input-label"/><TextField fx:id="balanceField" promptText="1000"/></VBox>
+            </GridPane>
+            <Label text="Guest balance is added only after valid card details are entered." wrapText="true" styleClass="subtitle"/>
+        </VBox>
+
+        <VBox fx:id="staffDetailsBox" spacing="14" styleClass="card">
+            <Label text="Staff Details" styleClass="nav-title"/>
+            <GridPane hgap="16" vgap="12">
+                <VBox spacing="6" GridPane.columnIndex="0" GridPane.rowIndex="0"><Label text="Working Hours" styleClass="input-label"/><TextField fx:id="workingHoursField"/></VBox>
+                <VBox spacing="6" GridPane.columnIndex="1" GridPane.rowIndex="0"><Label text="Override Key" styleClass="input-label"/><PasswordField fx:id="overrideKeyField"/></VBox>
+            </GridPane>
+        </VBox>
+
         <Button fx:id="registerButton" text="Create Account" onAction="#register" maxWidth="Infinity" />
     </VBox></center>
 </BorderPane>

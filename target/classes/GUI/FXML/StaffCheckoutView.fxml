@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.StaffCheckoutController">
-    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="🧾 Staff Check-out" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
-    <center><HBox spacing="20" styleClass="content"><VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Guest Invoice" styleClass="nav-title"/><ComboBox fx:id="guestBox" maxWidth="Infinity"/><ListView fx:id="reservationsList" prefHeight="430"/><Label fx:id="totalLabel" styleClass="subtitle"/></VBox><VBox spacing="12" styleClass="card" prefWidth="360"><Label text="Payment Control" styleClass="nav-title"/><Label text="Method" styleClass="input-label"/><ComboBox fx:id="paymentBox" maxWidth="Infinity"/><Label text="Staff Discount" styleClass="input-label"/><TextField fx:id="discountField"/><Button fx:id="checkoutButton" text="Process Checkout" onAction="#checkout" maxWidth="Infinity"/></VBox></HBox></center>
-</BorderPane>

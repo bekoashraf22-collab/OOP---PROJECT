@@ -30,7 +30,7 @@
 
                     <Button fx:id="loginButton" text="Login" maxWidth="Infinity" onAction="#login" styleClass="primary-login-button" />
                     <Label fx:id="statusLabel" text="" wrapText="true" styleClass="status-text" />
-                    <Button text="Create guest account" maxWidth="Infinity" onAction="#openRegister" styleClass="ghost-button" />
+                    <Button text="Create account" maxWidth="Infinity" onAction="#openRegister" styleClass="ghost-button" />
                 </VBox>
             </HBox>
         </StackPane>
