@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.ExtensionRequestsController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="Extension Requests" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="20" styleClass="content">
+        <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Requests" styleClass="nav-title"/><ListView fx:id="requestList" prefHeight="520"/></VBox>
+        <VBox spacing="12" styleClass="card" prefWidth="390"><Label text="Decision" styleClass="nav-title"/><Label fx:id="detailLabel" text="Select a request." wrapText="true" styleClass="subtitle"/><Label text="Extra Rate Per Extended Night" styleClass="input-label"/><TextField fx:id="extraRateField"/><Button fx:id="acceptButton" text="Accept Extension" onAction="#accept" maxWidth="Infinity"/><Button fx:id="declineButton" text="Decline Extension" onAction="#decline" maxWidth="Infinity" styleClass="ghost-button"/></VBox>
+    </HBox></center>
+</BorderPane>

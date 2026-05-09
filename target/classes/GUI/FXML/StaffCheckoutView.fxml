@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.StaffCheckoutController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="Early Checkout" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="20" styleClass="content">
+        <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Active Stays" styleClass="nav-title"/><ListView fx:id="reservationsList" prefHeight="520"/><Label fx:id="totalLabel" styleClass="subtitle"/></VBox>
+        <VBox spacing="12" styleClass="card" prefWidth="370"><Label text="Staff Refund" styleClass="nav-title"/><Label text="Refund Amount" styleClass="input-label"/><TextField fx:id="refundField" promptText="0"/><Label text="Only staff can use early checkout. Normal checkout happens automatically on the check-out date." wrapText="true" styleClass="subtitle"/><Button fx:id="checkoutButton" text="Process Early Checkout" onAction="#checkout" maxWidth="Infinity"/></VBox>
+    </HBox></center>
+</BorderPane>

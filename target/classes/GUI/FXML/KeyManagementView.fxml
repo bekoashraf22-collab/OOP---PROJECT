@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.KeyManagementController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="Key Management" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center>
+        <HBox spacing="20" styleClass="content">
+            <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Active Reservations" styleClass="nav-title"/><ListView fx:id="reservationList" prefHeight="560"/></VBox>
+            <VBox spacing="12" styleClass="card" prefWidth="400">
+                <Label text="Room Key" styleClass="nav-title"/>
+                <Label fx:id="detailLabel" text="Select a reservation." wrapText="true" styleClass="subtitle"/>
+                <Button text="Issue Key" onAction="#issueKey" maxWidth="Infinity"/>
+                <Button text="Return Key" onAction="#returnKey" maxWidth="Infinity" styleClass="ghost-button"/>
+                <Label fx:id="statusLabel" text="" wrapText="true" styleClass="status-text"/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
