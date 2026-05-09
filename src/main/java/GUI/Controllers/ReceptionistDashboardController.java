@@ -1,0 +1,33 @@
+package GUI.Controllers;
+
+import GUI.CODE.HotelApp;
+import GUI.Services.AppSession;
+import GUI.Services.HotelGuiService;
+import main_classes.HotelDatabase;
+import main_classes.Room;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+
+public class ReceptionistDashboardController {
+    @FXML private Label welcomeLabel;
+    @FXML private Label guestCountLabel;
+    @FXML private Label availableLabel;
+    @FXML private Label occupiedLabel;
+
+    @FXML private void initialize() {
+        HotelGuiService.processAutomaticCheckouts();
+        String name = AppSession.getCurrentUser() == null ? "Receptionist" : AppSession.getCurrentUser().getUsername();
+        welcomeLabel.setText("Front Desk, " + name);
+        guestCountLabel.setText(String.valueOf(HotelDatabase.guests.size()));
+        availableLabel.setText(String.valueOf(HotelDatabase.rooms.stream().filter(Room::isAvailable).count()));
+        occupiedLabel.setText(String.valueOf(HotelDatabase.rooms.stream().filter(r -> !r.isAvailable()).count()));
+    }
+
+    @FXML private void checkIn() { HotelApp.show("/GUI/FXML/CheckInView.fxml"); }
+    @FXML private void checkOut() { HotelApp.show("/GUI/FXML/StaffCheckoutView.fxml"); }
+    @FXML private void keys() { HotelApp.show("/GUI/FXML/KeyManagementView.fxml"); }
+    @FXML private void balance() { HotelApp.show("/GUI/FXML/StaffBalanceView.fxml"); }
+    @FXML private void extensions() { HotelApp.show("/GUI/FXML/ExtensionRequestsView.fxml"); }
+    @FXML private void accounts() { HotelApp.show("/GUI/FXML/RegisterView.fxml"); }
+    @FXML private void logout() { HotelApp.logout(); }
+}

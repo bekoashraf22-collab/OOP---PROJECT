@@ -1,0 +1,31 @@
+package GUI.Controllers;
+
+import GUI.CODE.HotelApp;
+import GUI.Services.AppSession;
+import main_classes.HotelDatabase;
+import javafx.fxml.FXML;
+import javafx.scene.control.Label;
+
+public class AdminDashboardController {
+    @FXML private Label welcomeLabel;
+    @FXML private Label roomsLabel;
+    @FXML private Label guestsLabel;
+    @FXML private Label staffLabel;
+    @FXML private Label logsLabel;
+
+    @FXML
+    private void initialize() {
+        String name = AppSession.getCurrentUser() == null ? "Admin" : AppSession.getCurrentUser().getUsername();
+        welcomeLabel.setText("Welcome, " + name);
+        roomsLabel.setText(String.valueOf(HotelDatabase.rooms.size()));
+        guestsLabel.setText(String.valueOf(HotelDatabase.guests.size()));
+        staffLabel.setText(String.valueOf(HotelDatabase.staffMembers.size()));
+        logsLabel.setText(String.valueOf(HotelDatabase.systemLogs.size()));
+    }
+
+    @FXML private void rooms() { HotelApp.show("/GUI/FXML/AdminRoomsView.fxml"); }
+    @FXML private void amenities() { HotelApp.show("/GUI/FXML/AdminAmenitiesView.fxml"); }
+    @FXML private void logs() { HotelApp.show("/GUI/FXML/LogsView.fxml"); }
+    @FXML private void accounts() { HotelApp.show("/GUI/FXML/RegisterView.fxml"); }
+    @FXML private void logout() { HotelApp.logout(); }
+}
