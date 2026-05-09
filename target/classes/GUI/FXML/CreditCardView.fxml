@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.CreditCardController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="Add Card Balance" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="22" styleClass="content">
+        <VBox spacing="14" styleClass="card" prefWidth="460">
+            <Label text="Credit Card" styleClass="nav-title"/>
+            <Label text="Card Number" styleClass="input-label"/><TextField fx:id="cardNumberField" promptText="1234 5678 9012 3456"/>
+            <Label text="Expiry" styleClass="input-label"/><TextField fx:id="expiryField" promptText="MM/YY"/>
+            <Label text="CVV" styleClass="input-label"/><PasswordField fx:id="cvvField" promptText="123"/>
+            <Label text="Amount" styleClass="input-label"/><TextField fx:id="amountField" promptText="500"/>
+            <Button fx:id="addButton" text="Add Balance" onAction="#addBalance" maxWidth="Infinity"/>
+        </VBox>
+        <VBox spacing="12" styleClass="hero" HBox.hgrow="ALWAYS"><Label text="Balance" styleClass="title"/><Label fx:id="balanceLabel" styleClass="subtitle" wrapText="true"/><Label text="Accepted format: 16 digit card number, expiry as MM/YY, 3 digit CVV, and a positive amount." styleClass="subtitle" wrapText="true"/></VBox>
+    </HBox></center>
+</BorderPane>

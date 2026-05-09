@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.AvailableRoomsController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="🛏 Available Rooms" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Refresh" onAction="#refresh"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><VBox spacing="14" styleClass="content"><Label fx:id="countLabel" styleClass="subtitle"/><ListView fx:id="roomsList" prefHeight="560"/><Button text="Book a Room" onAction="#bookSelected" maxWidth="Infinity"/></VBox></center>
+</BorderPane>
