@@ -1,0 +1,96 @@
+package GUI.Controllers;
+
+import GUI.CODE.HotelApp;
+import GUI.Services.AppSession;
+import GUI.Services.AsyncService;
+import GUI.Services.HotelGuiService;
+import GUI.Util.GuiUtils;
+import main_classes.Reservations;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+import java.util.List;
+
+public class ExtensionRequestsController {
+    @FXML private ListView<Reservations> requestList;
+    @FXML private TextField extraRateField;
+    @FXML private Label detailLabel;
+    @FXML private Button acceptButton;
+    @FXML private Button declineButton;
+
+    @FXML private void initialize() {
+        extraRateField.setText("0");
+        refresh();
+        requestList.getSelectionModel().selectedItemProperty().addListener((obs, old, r) -> show(r));
+    }
+
+    private void refresh() {
+        List<Reservations> requests = HotelGuiService.extensionRequests();
+        requestList.setItems(FXCollections.observableArrayList(requests));
+        requestList.setCellFactory(v -> new ListCell<Reservations>() {
+            @Override protected void updateItem(Reservations r, boolean empty) {
+                super.updateItem(r, empty);
+                if (empty || r == null) setText(null);
+                else setText(r.getGuest().getUsername() + " | Room " + r.getRoom().getRoomNumber() + " | " + r.getCheckOutDate() + " → " + r.getRequestedCheckOutDate());
+            }
+        });
+        if (!requests.isEmpty()) requestList.getSelectionModel().selectFirst();
+        else detailLabel.setText("No extension requests.");
+    }
+
+    private void show(Reservations r) {
+        if (r == null) { detailLabel.setText("Select a request."); return; }
+        detailLabel.setText("Guest: " + r.getGuest().getUsername() +
+                "\nRoom: " + r.getRoom().getRoomNumber() +
+                "\nCurrent check-out: " + r.getCheckOutDate() +
+                "\nRequested check-out: " + r.getRequestedCheckOutDate() +
+                "\nBase daily rate: $" + String.format("%.2f", r.calculateDailyRate()) +
+                "\nGuest balance: $" + String.format("%.2f", r.getGuest().getBalance()));
+    }
+
+    @FXML private void accept() {
+        double rate;
+        try { rate = Double.parseDouble(extraRateField.getText().trim()); }
+        catch (NumberFormatException e) { GuiUtils.error("Invalid Rate", "Extra rate must be a number."); return; }
+        Reservations selected = requestList.getSelectionModel().getSelectedItem();
+        acceptButton.setDisable(true);
+        declineButton.setDisable(true);
+        AsyncService.runAsync(() -> {
+            try { return HotelGuiService.acceptExtension(selected, AppSession.getCurrentUser(), rate); }
+            catch (Exception e) { throw new RuntimeException(e); }
+        }, charged -> {
+            acceptButton.setDisable(false);
+            declineButton.setDisable(false);
+            GuiUtils.info("Extension Accepted", "Extra amount charged: $" + String.format("%.2f", charged));
+            refresh();
+        }, error -> {
+            acceptButton.setDisable(false);
+            declineButton.setDisable(false);
+            GuiUtils.error("Extension Failed", rootMessage(error));
+        });
+    }
+
+    @FXML private void decline() {
+        Reservations selected = requestList.getSelectionModel().getSelectedItem();
+        acceptButton.setDisable(true);
+        declineButton.setDisable(true);
+        AsyncService.runAsync(() -> {
+            HotelGuiService.declineExtension(selected, AppSession.getCurrentUser());
+            return null;
+        }, ok -> {
+            acceptButton.setDisable(false);
+            declineButton.setDisable(false);
+            GuiUtils.info("Extension Declined", "Request declined.");
+            refresh();
+        }, error -> {
+            acceptButton.setDisable(false);
+            declineButton.setDisable(false);
+            GuiUtils.error("Extension Failed", rootMessage(error));
+        });
+    }
+
+    private String rootMessage(Throwable t) { Throwable x = t; while (x.getCause() != null) x = x.getCause(); return x.getMessage(); }
+    @FXML private void back() { HotelApp.show("/GUI/FXML/ReceptionistDashboard.fxml"); }
+    @FXML private void logout() { HotelApp.logout(); }
+}
+

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.StaffBalanceController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="Add Guest Balance" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center>
+        <HBox spacing="20" styleClass="content">
+            <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Guests" styleClass="nav-title"/><ListView fx:id="guestList" prefHeight="560"/></VBox>
+            <VBox spacing="12" styleClass="card" prefWidth="410">
+                <Label text="Balance Update" styleClass="nav-title"/>
+                <Label fx:id="detailLabel" text="Select a guest." wrapText="true" styleClass="subtitle"/>
+                <VBox spacing="7"><Label text="Amount" styleClass="input-label"/><TextField fx:id="amountField" promptText="Example: 500"/></VBox>
+                <VBox spacing="7"><Label text="Note" styleClass="input-label"/><TextField fx:id="noteField" promptText="Cash deposit / correction / front desk payment"/></VBox>
+                <Button text="Add Balance" onAction="#addBalance" maxWidth="Infinity"/>
+                <Label fx:id="statusLabel" text="" wrapText="true" styleClass="status-text"/>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>

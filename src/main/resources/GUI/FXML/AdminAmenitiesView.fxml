@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.AdminAmenitiesController">
+    <top><HBox alignment="CENTER_LEFT" spacing="12" styleClass="header"><Button text="← Dashboard" onAction="#back" styleClass="ghost-button"/><Label text="✨ Amenities Studio" styleClass="title"/><Region HBox.hgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button"/></HBox></top>
+    <center><HBox spacing="18" styleClass="content">
+        <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Rooms" styleClass="nav-title"/><ListView fx:id="roomsList" prefHeight="480"/></VBox>
+        <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Global Amenities" styleClass="nav-title"/><ListView fx:id="globalAmenitiesList" prefHeight="230"/><Button text="Add Selected Amenity To Room" onAction="#addToRoom"/><Label text="Create Amenity" styleClass="nav-title"/><TextField fx:id="amenityIdField" promptText="Amenity ID"/><TextField fx:id="amenityNameField" promptText="Name"/><TextField fx:id="amenityCostField" promptText="Extra cost"/><Button text="Create Amenity" onAction="#createAmenity" styleClass="ghost-button"/></VBox>
+        <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS"><Label text="Amenities In Selected Room" styleClass="nav-title"/><ListView fx:id="roomAmenitiesList" prefHeight="480"/><Button text="Remove From Room" onAction="#removeFromRoom" styleClass="danger-button"/></VBox>
+    </HBox></center>
+</BorderPane>

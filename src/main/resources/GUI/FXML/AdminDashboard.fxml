@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?><?import javafx.scene.control.*?>
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="GUI.Controllers.AdminDashboardController">
+    <left><VBox styleClass="side"><Label text="✦ Luxora" styleClass="nav-title"/><Button text="🏨 Rooms" onAction="#rooms" maxWidth="Infinity"/><Button text="✨ Amenities" onAction="#amenities" maxWidth="Infinity"/><Button text="📜 Logs" onAction="#logs" maxWidth="Infinity"/><Button text="👥 Create Accounts" onAction="#accounts" maxWidth="Infinity"/><Region VBox.vgrow="ALWAYS"/><Button text="Logout" onAction="#logout" styleClass="danger-button" maxWidth="Infinity"/></VBox></left>
+    <center><VBox spacing="24" styleClass="content"><Label fx:id="welcomeLabel" styleClass="title"/><Label text="Admin control panel" styleClass="subtitle"/>
+        <HBox spacing="18"><VBox styleClass="small-card"><Label text="Rooms" styleClass="metric-name"/><Label fx:id="roomsLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="Guests" styleClass="metric-name"/><Label fx:id="guestsLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="Staff" styleClass="metric-name"/><Label fx:id="staffLabel" styleClass="metric"/></VBox><VBox styleClass="small-card"><Label text="Logs" styleClass="metric-name"/><Label fx:id="logsLabel" styleClass="metric"/></VBox></HBox>
+        <VBox styleClass="card" spacing="12"><Label text="What you can manage" styleClass="nav-title"/><Label text="Add/remove rooms, create new room types, assign amenities to rooms, create new amenities, and monitor system logs." wrapText="true" styleClass="subtitle"/></VBox>
+    </VBox></center>
+</BorderPane>
