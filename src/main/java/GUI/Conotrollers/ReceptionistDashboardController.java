@@ -31,4 +31,3 @@ public class ReceptionistDashboardController {
     @FXML private void accounts() { HotelApp.show("/GUI/FXML/RegisterView.fxml"); }
     @FXML private void logout() { HotelApp.logout(); }
 }
-

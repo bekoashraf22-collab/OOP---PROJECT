@@ -82,4 +82,3 @@ public class KeyManagementController {
     @FXML private void back() { HotelApp.show("/GUI/FXML/ReceptionistDashboard.fxml"); }
     @FXML private void logout() { HotelApp.logout(); }
 }
-

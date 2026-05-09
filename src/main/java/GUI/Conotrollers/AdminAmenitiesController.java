@@ -62,4 +62,3 @@ public class AdminAmenitiesController {
     @FXML private void back() { HotelApp.show("/GUI/FXML/AdminDashboard.fxml"); }
     @FXML private void logout() { HotelApp.logout(); }
 }
-

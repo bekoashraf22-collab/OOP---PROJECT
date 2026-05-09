@@ -73,4 +73,3 @@ public class StaffBalanceController {
     @FXML private void back() { HotelApp.show("/GUI/FXML/ReceptionistDashboard.fxml"); }
     @FXML private void logout() { HotelApp.logout(); }
 }
-
